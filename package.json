@@ -1,0 +1,26 @@
+{
+  "name": "openmusic",
+  "version": "1.0.0",
+  "description": "this aplikasi for manage your music playlist",
+  "main": "index.js",
+  "scripts": {
+    "prod": "NODE_ENV=production node ./src/server.js",
+    "dev": "nodemon ./src/server.js",
+    "lint": "eslint ./src",
+    "migrate": "node-pg-migrate"
+  },
+  "author": "Heldi Tio Pratama",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.2",
+    "nodemon": "^2.0.12"
+  },
+  "dependencies": {
+    "@hapi/hapi": "^20.1.5",
+    "dotenv": "^10.0.0",
+    "node-pg-migrate": "^5.10.0",
+    "pg": "^8.7.1"
+  }
+}
