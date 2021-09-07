@@ -13,7 +13,6 @@ const init = async () => {
   });
 
   await server.start();
-  console.log(`server running ${server.info.uri}`);
 };
 
 init();
