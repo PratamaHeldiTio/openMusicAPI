@@ -9,16 +9,10 @@ class OpenMusicHandler {
     autoBind(this);
   }
 
-  async postSongHandler(request, h) {
+  async postSongHandler({ payload }, h) {
     try {
-      this._validator.validateSongPayload(request.payload);
-      const {
-        title, year, performer, genre, duration,
-      } = request.payload;
-
-      const songId = await this._service.addSong({
-        title, year, performer, genre, duration,
-      });
+      this._validator.validateSongPayload(payload);
+      const songId = await this._service.addSong(payload);
 
       return succesResponse(h, {
         message: 'Lagu berhasil ditambahkan',
@@ -35,7 +29,7 @@ class OpenMusicHandler {
 
   async getSongsHandler(request, h) {
     const songs = await this._service.getSongs();
-    return succesResponse(h, { data: { songs: [songs] } });
+    return succesResponse(h, { data: { songs } });
   }
 
   async getSongByIdHandler(request, h) {
@@ -55,17 +49,12 @@ class OpenMusicHandler {
     return serverErrorResponse(h);
   }
 
-  async putSongByIdHandler(request, h) {
+  async putSongByIdHandler({ payload, params }, h) {
     try {
-      this._validator.validateSongPayload(request.payload);
-      const { songId } = request.params;
-      const {
-        title, year, performer, genre, duration,
-      } = request.payload;
+      this._validator.validateSongPayload(payload);
+      const { songId } = params;
 
-      await this._service.editSongById(songId, {
-        title, year, performer, genre, duration,
-      });
+      await this._service.editSongById(songId, payload);
 
       return succesResponse(h, { message: 'lagu berhasil diperbarui' });
     } catch (error) {
