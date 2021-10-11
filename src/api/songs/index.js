@@ -1,4 +1,4 @@
-const OpenMusicHandler = require('./handler');
+const OpenMusicHandler = require('./Handler');
 const routes = require('./routes');
 
 module.exports = {

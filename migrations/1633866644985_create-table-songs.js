@@ -1,7 +1,7 @@
 exports.up = (pgm) => {
-  pgm.createTable('openmusic', {
+  pgm.createTable('songs', {
     id: {
-      type: 'VARCHAR(16)',
+      type: 'VARCHAR(50)',
       primaryKey: true,
     },
     title: {
@@ -36,5 +36,5 @@ exports.up = (pgm) => {
 };
 
 exports.down = (pgm) => {
-  pgm.dropTable('openmusic');
+  pgm.dropTable('songs');
 };
