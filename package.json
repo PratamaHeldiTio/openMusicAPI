@@ -19,7 +19,9 @@
   },
   "dependencies": {
     "@hapi/hapi": "^20.1.5",
+    "@hapi/jwt": "^2.1.0",
     "auto-bind": "^4.0.0",
+    "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "joi": "^17.4.2",
     "nanoid": "^3.1.25",

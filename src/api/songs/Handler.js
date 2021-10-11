@@ -2,7 +2,7 @@ const autoBind = require('auto-bind');
 const ClientError = require('../../exceptionError/ClientError');
 const { succesResponse, failResponses, serverErrorResponse } = require('../../utils/responses');
 
-class OpenMusicHandler {
+class SongsHandler {
   constructor(service, validator) {
     this._service = service;
     this._validator = validator;
@@ -82,4 +82,4 @@ class OpenMusicHandler {
   }
 }
 
-module.exports = OpenMusicHandler;
+module.exports = SongsHandler;
