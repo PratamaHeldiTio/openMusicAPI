@@ -15,7 +15,7 @@ class PlaylistsHandler {
 
   async postPlaylistHandler(request, h) {
     try {
-      this._validator.validatePostPayload(request.payload);
+      this._validator.validatePostPlaylistPayload(request.payload);
       const { id: credentialId } = request.auth.credentials;
       const playlistId = await this._service.addPlaylist(request.payload.name, credentialId);
 
@@ -24,6 +24,20 @@ class PlaylistsHandler {
         data: { playlistId },
         statusCode: 201,
       });
+    } catch (error) {
+      if (error instanceof ClientError) {
+        return failResponses(h, error);
+      }
+      return serverErrorResponse(h);
+    }
+  }
+
+  async getPlaylistsHandler(request, h) {
+    try {
+      const { id: credentialId } = request.auth.credentials;
+      const playlists = await this._service.getPlaylists(credentialId);
+
+      return succesResponse(h, { data: { playlists } });
     } catch (error) {
       if (error instanceof ClientError) {
         return failResponses(h, error);
