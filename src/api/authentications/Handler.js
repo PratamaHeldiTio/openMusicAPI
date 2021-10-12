@@ -36,15 +36,32 @@ class AuthenticationsHandler {
   // payload {refreshToken}
   async putAuthenticationHandler({ payload }, h) {
     try {
+      const { refreshToken } = payload;
       this._validator.validatePutAuthenticationPayload(payload);
-      await this._authenticationsService.verifyRefreshToken(payload);
-      const { id } = this._tokenManager.verifyRefreshToken(payload);
+      await this._authenticationsService.verifyRefreshToken(refreshToken);
+      const { id } = this._tokenManager.verifyRefreshToken(refreshToken);
       const accessToken = this._tokenManager.generateAccessToken({ id });
 
       return succesResponse(h, {
         message: 'Authentication berhasil diperbaharui',
         data: { accessToken },
       });
+    } catch (error) {
+      if (error instanceof ClientError) {
+        return failResponses(h, error);
+      }
+      return serverErrorResponse(h);
+    }
+  }
+
+  async deleteAuthenticationHandler({ payload }, h) {
+    try {
+      const { refreshToken } = payload;
+      this._validator.validateDeleteAuthenticationPayload(payload);
+      await this._authenticationsService.verifyRefreshToken(refreshToken);
+      await this._authenticationsService.deleteRefreshToken(refreshToken);
+
+      return succesResponse(h, { message: 'Refresh token berhasil dihapus' });
     } catch (error) {
       if (error instanceof ClientError) {
         return failResponses(h, error);
