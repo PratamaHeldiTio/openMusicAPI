@@ -1,6 +1,5 @@
 const { nanoid } = require('nanoid');
 const { Pool } = require('pg');
-const InvariantError = require('../exceptionError/InvariantError');
 const NotFoundError = require('../exceptionError/NotFoundError');
 const AuthorizationError = require('../exceptionError/AuthorizationError');
 
@@ -56,19 +55,6 @@ class PlaylistsService {
     };
 
     await this._pool.query(query);
-  }
-
-  async verifySongId(songId) {
-    const query = {
-      text: 'SELECT * FROM songs WHERE id = $1',
-      values: [songId],
-    };
-
-    const result = await this._pool.query(query);
-
-    if (!result.rowCount) {
-      throw new InvariantError('Lagu gagal ditambahkan, id lagu tidak valid');
-    }
   }
 
   async addSongToPlaylist(playlistId, songId) {

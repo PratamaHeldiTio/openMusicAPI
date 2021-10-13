@@ -5,7 +5,7 @@ const tokenManager = require('./token/tokenManager');
 
 // songs
 const songs = require('./api/songs');
-const SongsServices = require('./services/SongsService');
+const SongsService = require('./services/SongsService');
 const songsValidator = require('./validator/songs');
 
 // users
@@ -24,7 +24,7 @@ const PlaylistsService = require('./services/PlaylistsService');
 const playlistsValidator = require('./validator/playlists');
 
 const init = async () => {
-  const songsServices = new SongsServices();
+  const songsService = new SongsService();
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
   const playlistsService = new PlaylistsService();
@@ -65,7 +65,7 @@ const init = async () => {
     {
       plugin: songs,
       options: {
-        service: songsServices,
+        service: songsService,
         validator: songsValidator,
       },
     },
@@ -88,7 +88,8 @@ const init = async () => {
     {
       plugin: playlists,
       options: {
-        service: playlistsService,
+        playlistsService,
+        songsService,
         validator: playlistsValidator,
       },
     },
