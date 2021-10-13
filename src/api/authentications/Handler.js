@@ -1,6 +1,10 @@
 const autoBind = require('auto-bind');
 const ClientError = require('../../exceptionError/ClientError');
-const { succesResponse, failResponses, serverErrorResponse } = require('../../utils/responses');
+const {
+  succesResponse,
+  failResponses,
+  serverErrorResponse,
+} = require('../../utils/responses');
 
 class AuthenticationsHandler {
   constructor(authenticationsService, usersService, tokenManager, validator) {
