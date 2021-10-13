@@ -17,12 +17,7 @@ class UsersService {
       text: 'INSERT INTO users VALUES($1, $2, $3, $4) RETURNING id',
       values: [id, username, fullname, hashPassword],
     };
-
     const result = await this._pool.query(query);
-
-    if (!result.rowCount) {
-      throw new InvariantError('User gagal ditambahkan');
-    }
 
     return result.rows[0].id;
   }

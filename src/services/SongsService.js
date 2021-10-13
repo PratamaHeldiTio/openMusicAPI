@@ -1,6 +1,5 @@
 const { nanoid } = require('nanoid');
 const { Pool } = require('pg');
-const InvariantError = require('../exceptionError/InvariantError');
 const NotFoundError = require('../exceptionError/NotFoundError');
 const mapDBtoModel = require('../utils/mapDBToModel');
 
@@ -16,12 +15,7 @@ class SongsServices {
       text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7, $7) RETURNING id',
       values: [id, ...Object.values(payload), insertedAt],
     };
-
     const result = await this._pool.query(query);
-
-    if (!result.rows[0].id) {
-      throw new InvariantError('Music gagal ditambahkan');
-    }
 
     return result.rows[0].id;
   }
