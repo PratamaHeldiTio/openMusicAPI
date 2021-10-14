@@ -20,7 +20,7 @@ class CollaborationsService {
 
   async deleteCollaboration({ playlistId, userId }) {
     const query = {
-      text: 'DELETE FROM collaborations WHERE playlist_id = $1, user_id = $2',
+      text: 'DELETE FROM collaborations WHERE playlist_id = $1 AND user_id = $2',
       values: [playlistId, userId],
     };
 

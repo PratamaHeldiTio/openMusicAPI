@@ -2,6 +2,8 @@ require('dotenv').config();
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
 const tokenManager = require('./token/tokenManager');
+const ClientError = require('./exceptionError/ClientError');
+const { failResponses, serverErrorResponse } = require('./utils/responses');
 
 // songs
 const songs = require('./api/songs');
@@ -108,6 +110,22 @@ const init = async () => {
       },
     },
   ]);
+
+  // penanganan catch dari semua handler dialihkan kesini
+  server.ext('onPreResponse', (request, h) => {
+    const { response } = request;
+
+    if (response instanceof ClientError) {
+      return failResponses(h, response);
+    }
+
+    if (response instanceof Error && response.output.statusCode === 500) {
+      return serverErrorResponse(h);
+    }
+
+    // lanjut ke handler masing2 jikda tidak ada client error atau server error 500
+    return response.continue || response;
+  });
 
   await server.start();
 };
