@@ -4,9 +4,10 @@ const NotFoundError = require('../../exceptionError/NotFoundError');
 const AuthorizationError = require('../../exceptionError/AuthorizationError');
 
 class PlaylistsService {
-  constructor(collaborationsService) {
+  constructor(collaborationsService, cacheService) {
     this._pool = new Pool();
     this._collaborationsService = collaborationsService;
+    this._cacheService = cacheService;
   }
 
   async addPlaylist(name, owner) {
@@ -66,21 +67,28 @@ class PlaylistsService {
       values: [id, playlistId, songId],
     };
 
+    await this._cacheService.delete(`playlist:${playlistId}`);
     await this._pool.query(query);
   }
 
   async getSongOnPlaylist(playlistId) {
-    const query = {
-      text:
-      `SELECT songs.id, songs.title, songs.performer FROM songs
-      LEFT JOIN playlistsongs ON playlistsongs.song_id = songs.id
-      WHERE playlistsongs.playlist_id = $1
-      GROUP BY songs.id`,
-      values: [playlistId],
-    };
-    const result = await this._pool.query(query);
+    try {
+      const result = await this._cacheService.get(`playlist:${playlistId}`);
+      return JSON.parse(result);
+    } catch (error) {
+      const query = {
+        text:
+        `SELECT songs.id, songs.title, songs.performer FROM songs
+        LEFT JOIN playlistsongs ON playlistsongs.song_id = songs.id
+        WHERE playlistsongs.playlist_id = $1
+        GROUP BY songs.id`,
+        values: [playlistId],
+      };
+      const result = await this._pool.query(query);
 
-    return result.rows;
+      await this._cacheService.set(`playlist:${playlistId}`, JSON.stringify(result.rows));
+      return result.rows;
+    }
   }
 
   async deleteSongOnPlaylist(playlistId, songId) {
@@ -95,6 +103,7 @@ class PlaylistsService {
   async verifyPlaylistAccess(playlistId, credentialId) {
     try {
       await this.verifyPlaylistOwner(playlistId, credentialId);
+      await this._cacheService.delete(`playlist:${playlistId}`);
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw error;
@@ -102,6 +111,7 @@ class PlaylistsService {
 
       try {
         await this._collaborationsService.verifyCollaboration(playlistId, credentialId);
+        await this._cacheService.delete(`playlist:${playlistId}`);
       } catch {
         throw error;
       }

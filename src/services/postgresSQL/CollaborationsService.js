@@ -3,8 +3,9 @@ const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptionError/InvariantError');
 
 class CollaborationsService {
-  constructor() {
+  constructor(cacheService) {
     this._pool = new Pool();
+    this._cacheService = cacheService;
   }
 
   async addCollaboration({ playlistId, userId }) {
@@ -15,6 +16,7 @@ class CollaborationsService {
     };
     const result = await this._pool.query(query);
 
+    await this._cacheService.delete(`playlist:${playlistId}`);
     return result.rows;
   }
 
@@ -24,6 +26,7 @@ class CollaborationsService {
       values: [playlistId, userId],
     };
 
+    await this._cacheService.delete(`playlist:${playlistId}`);
     await this._pool.query(query);
   }
 

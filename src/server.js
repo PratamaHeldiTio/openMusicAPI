@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 require('dotenv').config();
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
@@ -42,12 +43,16 @@ const uploads = require('./api/uploads');
 const StorageService = require('./services/storage/StorageService');
 const uploadsValidator = require('./validator/uploads');
 
+// cache (redis)
+const CacheService = require('./services/redis/CacheService');
+
 const init = async () => {
+  const cacheService = new CacheService();
   const songsService = new SongsService();
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
-  const collaborationsService = new CollaborationsService();
-  const playlistsService = new PlaylistsService(collaborationsService);
+  const collaborationsService = new CollaborationsService(cacheService);
+  const playlistsService = new PlaylistsService(collaborationsService, cacheService);
   const storageService = new StorageService(path.resolve(__dirname, 'api/uploads/file/pictures'));
 
   const server = Hapi.server({
@@ -151,6 +156,7 @@ const init = async () => {
     }
 
     if (response instanceof Error && response.output.statusCode === 500) {
+      console.error(response);
       return serverErrorResponse(h);
     }
 

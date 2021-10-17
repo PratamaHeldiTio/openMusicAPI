@@ -5,6 +5,9 @@
 ### dotenv ###
 .env
 
+### File ###
+src/api/uploads/file
+
 ### Node ###
 # Logs
 logs
