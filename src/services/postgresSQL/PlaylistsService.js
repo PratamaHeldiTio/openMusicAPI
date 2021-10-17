@@ -1,7 +1,7 @@
 const { nanoid } = require('nanoid');
 const { Pool } = require('pg');
-const NotFoundError = require('../exceptionError/NotFoundError');
-const AuthorizationError = require('../exceptionError/AuthorizationError');
+const NotFoundError = require('../../exceptionError/NotFoundError');
+const AuthorizationError = require('../../exceptionError/AuthorizationError');
 
 class PlaylistsService {
   constructor(collaborationsService) {
@@ -36,7 +36,7 @@ class PlaylistsService {
 
   async verifyPlaylistOwner(playlistId, owner) {
     const query = {
-      text: 'SELECT * FROM playlists WHERE id = $1',
+      text: 'SELECT owner FROM playlists WHERE id = $1',
       values: [playlistId],
     };
     const result = await this._pool.query(query);

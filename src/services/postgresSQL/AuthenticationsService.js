@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const InvariantError = require('../exceptionError/InvariantError');
+const InvariantError = require('../../exceptionError/InvariantError');
 
 class AuthenticationsService {
   constructor() {

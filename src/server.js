@@ -7,28 +7,33 @@ const { failResponses, serverErrorResponse } = require('./utils/responses');
 
 // songs
 const songs = require('./api/songs');
-const SongsService = require('./services/SongsService');
+const SongsService = require('./services/postgresSQL/SongsService');
 const songsValidator = require('./validator/songs');
 
 // users
 const users = require('./api/users');
-const UsersService = require('./services/UsersService');
+const UsersService = require('./services/postgresSQL/UsersService');
 const usersValidator = require('./validator/users');
 
 // authentications
 const authentications = require('./api/authentications');
-const AuthenticationsService = require('./services/AuthenticationsService');
+const AuthenticationsService = require('./services/postgresSQL/AuthenticationsService');
 const authenticationsValidator = require('./validator/authentications');
 
 // playlist
 const playlists = require('./api/playlists');
-const PlaylistsService = require('./services/PlaylistsService');
+const PlaylistsService = require('./services/postgresSQL/PlaylistsService');
 const playlistsValidator = require('./validator/playlists');
 
 // collaborations
 const collaborations = require('./api/collaborations');
-const CollaborationsService = require('./services/CollaborationsService');
+const CollaborationsService = require('./services/postgresSQL/CollaborationsService');
 const collaborationsValidator = require('./validator/collaborations');
+
+// exports
+const _exports = require('./api/exports');
+const exportsValidator = require('./validator/exports');
+const producerService = require('./services/rabbitMQ/producerService');
 
 const init = async () => {
   const songsService = new SongsService();
@@ -107,6 +112,13 @@ const init = async () => {
         collaborationsService,
         playlistsService,
         validator: collaborationsValidator,
+      },
+    },
+    {
+      plugin: _exports,
+      options: {
+        service: producerService,
+        validator: exportsValidator,
       },
     },
   ]);

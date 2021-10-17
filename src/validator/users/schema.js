@@ -6,4 +6,4 @@ const userPayloadSchema = Joi.object({
   password: Joi.string().required(),
 });
 
-module.exports = userPayloadSchema;
+module.exports = { userPayloadSchema };
