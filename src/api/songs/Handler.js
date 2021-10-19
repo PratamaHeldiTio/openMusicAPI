@@ -24,8 +24,8 @@ class SongsHandler {
     return succesResponse(h, { data: { songs } });
   }
 
-  async getSongByIdHandler(request, h) {
-    const { songId } = request.params;
+  async getSongByIdHandler({ params }, h) {
+    const { songId } = params;
     const song = await this._service.getSongById(songId);
 
     return succesResponse(h, {
@@ -42,8 +42,8 @@ class SongsHandler {
     return succesResponse(h, { message: 'lagu berhasil diperbarui' });
   }
 
-  async deleteSongByIdHandler(request, h) {
-    const { songId } = request.params;
+  async deleteSongByIdHandler({ params }, h) {
+    const { songId } = params;
     await this._service.deleteSongById(songId);
 
     return succesResponse(h, { message: 'lagu berhasil dihapus' });

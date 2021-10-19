@@ -9,10 +9,10 @@ class ExportsHandler {
     autoBind(this);
   }
 
-  async postExportPlaylistsHandler(request, h) {
-    const { id: credentialId } = request.auth.credentials;
-    const { playlistId } = request.params;
-    const { targetEmail } = request.payload;
+  async postExportPlaylistsHandler({ payload, auth, params }, h) {
+    const { id: credentialId } = auth.credentials;
+    const { playlistId } = params;
+    const { targetEmail } = payload;
     const message = {
       targetEmail,
       playlistId,

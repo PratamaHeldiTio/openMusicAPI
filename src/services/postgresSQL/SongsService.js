@@ -29,10 +29,9 @@ class SongsService {
       return JSON.parse(result);
     } catch (error) {
       const result = await this._pool.query('SELECT id, title, performer FROM songs');
-      const mapedResult = result.rows.map(mapDBtoModel);
 
-      await this._cacheService.set('songs', JSON.stringify(mapedResult));
-      return mapedResult;
+      await this._cacheService.set('songs', JSON.stringify(result.rows));
+      return result.rows;
     }
   }
 
@@ -70,6 +69,7 @@ class SongsService {
       throw new NotFoundError('Song gagal diperbaharui, Id tidak ditemukan');
     }
 
+    await this._cacheService.delete('songs');
     await this._cacheService.delete(`song:${id}`);
   }
 
@@ -84,6 +84,7 @@ class SongsService {
       throw new NotFoundError('Song gagal dihapus.  Id tidak ditemukan');
     }
 
+    await this._cacheService.delete('songs');
     await this._cacheService.delete(`song:${id}`);
   }
 
